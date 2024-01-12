@@ -12,7 +12,7 @@ public class Plugin : BasePlugin
 {
     internal static ManualLogSource PluginLog { get; private set; }
 
-    public const string c_pluginGUID = "com.crabnicholson.piratebase";
+    public const string c_pluginGUID = "com.crabnickolson.pirate_base";
     public const string c_pluginName = "PirateBase";
     public const string c_processName = "ShadowGambit_TCC.exe";
 
