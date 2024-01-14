@@ -1,6 +1,7 @@
 ﻿using BepInEx;
-using BepInEx.Unity.IL2CPP;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace PirateBase;
 
@@ -9,23 +10,10 @@ public static class ShaderUtility
     private static Shader s_standardShaderHideVC;
     private static Shader s_standardShaderShowVC;
 
-    public static Shader FindShader(string _name)
-    {
-        // for some reason, loading shaders with Shader.Find() doesn't work.
-        // instead just search through exisiting objects to find the shader we want.
-        var renderers = GameObject.FindObjectsOfType<MeshRenderer>();
-        foreach (var renderer in renderers)
-        {
-            if (renderer.sharedMaterial != null && renderer.sharedMaterial.shader.name == _name)
-                return renderer.sharedMaterial.shader;
-        }
-        return null;
-    }
-
     public static Shader FindStandardHideVCShader()
     {
         if (s_standardShaderHideVC == null)
-            s_standardShaderHideVC = FindShader("Mimimi/Standard/Standard (Metallic) HideVC");
+            s_standardShaderHideVC = loadShader("Assets/Shader/Mimimi/include/Standard/MiStandardMetallic-HideVC.shader");
         return s_standardShaderHideVC;
     }
 
@@ -33,7 +21,7 @@ public static class ShaderUtility
     public static Shader FindStandardShowVCShader()
     {
         if (s_standardShaderShowVC == null)
-            s_standardShaderShowVC = FindShader("Mimimi/Standard/Standard (Metallic) ShowVC");
+            s_standardShaderShowVC = loadShader("Assets/Shader/Mimimi/include/Standard/MiStandardMetallic-ShowVC.shader");
         return s_standardShaderShowVC;
     }
 
@@ -51,5 +39,15 @@ public static class ShaderUtility
                 }
             }
         }
+    }
+
+    private static Shader loadShader(string _key)
+    {
+        var op = Addressables.LoadAssetAsync<Shader>(_key);
+        op.WaitForCompletion();
+        if (op.Status == AsyncOperationStatus.Succeeded)
+            return op.Result;
+        else
+            return null;
     }
 }
