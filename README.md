@@ -1,4 +1,4 @@
-﻿# PirateBase
+﻿# Pirate Base
 
 This is a [BepInEx](https://github.com/BepInEx/BepInEx) plugin for [Shadow Gambit](https://store.steampowered.com/app/1545560/Shadow_Gambit_The_Cursed_Crew/) that wraps core game functionality and makes it easier to access for other plugins.
 
@@ -29,11 +29,11 @@ public class YourPlugin : BasePlugin
 
 ## IL2CPP
 Shadow Gambit uses IL2CPP, which unfortunately makes modding fairly complicated. Here are some things to watch out for:
-- Your cannot cast Il2CPP objects normally. Instead you must use the `Cast<T>()` method.
+- Your cannot cast Il2CPP objects normally. Instead you must use the `x.Cast<T>()` method.
 - If you directly override a IL2CPP method in a subclass, then you cannot call `base.method()` from within that method, as that would cause an infinite recursion.
 - If you start a thread you must "attach" it by calling either `IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get())` or `ModThreadUtility.AttachThread()` from within the thread.
 - Some IL2CPP structs have been converted into classes. Be careful not to initialize these with `default`.
-    - This can be annoying as some game methods initialize affected struct parameters with `default`. You must set these to something else when calling these methods or the game may crash. `CharacterUtility` contains some helper methods for affected game methods.
+    - This can be annoying as some game methods initialize affected struct parameters with `default`. You must set these to something else when calling these methods or the game may crash. `CharacterUtility` contains helper methods for some affected game methods.
 - Some IL2CPP classes are not converted correctly and cannot be accessed directly from C#, e.g. `BalancedEnum`. You should still be able to access these classes via IL2CPP reflection.
 - Calling IL2CPP methods can become very performance intensive in math heavy code. For this reason you should avoid Unity's math library as much as possible.
     - Use `System.Math` instead of `UnityEngine.Mathf`
@@ -44,7 +44,7 @@ Shadow Gambit uses IL2CPP, which unfortunately makes modding fairly complicated.
 ## Documentation
 
 ### Game Events
-`GameEvents` is a helper class that let's you hook into common game events, e.g. `GameEvents.RunOnGameInit(callback)`.
+`GameEvents` is a helper class that let's you get callbacks for common game events. You will most likely need `GameEvents.RunOnGameInit(callback)` to be able to hook into game systems after they have been initialized.
 
 ### Scripting
 `ModScripting` lets you register custom MiScript commands. To do this, you must create a new IL2CPP class that implements your commands:
@@ -76,7 +76,8 @@ internal class YourScriptingClass : Il2CppSystem.Object
 ```
 
 You must then register an instance of this class on game init with `ModScripting.RegisterLibrary(new YourScriptingClass());`
-You can then use your methods ingame like this:
+
+Then you can use your methods ingame in any MiScript field like this:
 ```
 your-custom-method
 
@@ -134,6 +135,8 @@ internal class YourSaveableClass : ModSaveable
 }
 ```
 
+Override `serializeMod()` and `deserializeMod()` and add the fields that you want to have saved. Be careful that you use the correct serialize/deserialize methods for your field type.
+
 When your plugin is loading you must register your component class with `ClassInjector.RegisterTypeInIl2Cpp<YourSaveableClass>()` and `ModSaveManager.RegisterType<YourSaveableClass>()`.
 
 When you instantiate your component, it must be parented under a save root:
@@ -158,5 +161,5 @@ private void Update()
 ```
 
 ### Shader
-For some reason `UnityEngine.Shader.Find("name")` does not work. Instead you can either load shaders with the Addressable system, or use `ShaderUtility.FindShader("name")`, which will search through all currently instantiated GameObjects for your shader by name.
-For most objects you will either want to use `ShaderUtility.FindStandardHideVCShader()` or `ShaderUtility.FindStandardShowVCShader()`, which will make the viewcone draw behind or infront of your object respectively.
+For some reason `UnityEngine.Shader.Find("name")` does not work. Instead you can directly load shaders with the Addressable system, although for most objects you will want you will want to use the "MiStandardMetallic" shaders.
+You can access these with `ShaderUtility.FindStandardHideVCShader()` and `ShaderUtility.FindStandardShowVCShader()`, which will make the viewcone draw behind or infront of your object respectively.
