@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 
@@ -138,6 +137,8 @@ public static class ClassExtensions
 
         if (_validate)
         {
+            // reading meshes back from gpu memory does not work arbitrarily for some meshes.
+            // we can detect this by checking if our result buffer is all zeros.
             bool vertexDataValid = false;
             for (int i = 0; i < totalSize; i++)
             {
@@ -168,6 +169,7 @@ public static class ClassExtensions
         uint currentIndexOffset = 0;
         for (int i = 0; i < meshCopy.subMeshCount; i++)
         {
+            // normal property setters on SubMeshDescriptor are broken for some reason
             uint subMeshIndexCount = _mesh.GetIndexCount(i);
             var desc = new UnityEngine.Rendering.SubMeshDescriptor();
             desc._indexStart_k__BackingField = (int)currentIndexOffset;

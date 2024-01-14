@@ -1,11 +1,7 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
-using Il2CppInterop.Runtime.Attributes;
-using Il2CppInterop.Runtime.Injection;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HarmonyLib;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace PirateBase;
@@ -45,7 +41,7 @@ public static class GameEvents
         if (s_helperInstance == null)
         {
             s_helperInstance = IL2CPPChainloader.AddUnityComponent<GameEventHelper>();
-            s_helperInstance.StartCoroutine(BepInEx.Unity.IL2CPP.Utils.Collections.CollectionExtensions.WrapToIl2Cpp(waitForGameInitCoro()));
+            s_helperInstance.StartCoroutine(waitForGameInitCoro().WrapToIl2Cpp());
         }
 
         RunOnGameInit(() =>
@@ -124,12 +120,12 @@ public static class GameEvents
 
     public static void RunNextUpdate(System.Action _callback, int _updateCount = 1)
     {
-        s_helperInstance.StartCoroutine(BepInEx.Unity.IL2CPP.Utils.Collections.CollectionExtensions.WrapToIl2Cpp(waitForNextUpdateCoro(_callback, _updateCount)));
+        s_helperInstance.StartCoroutine(waitForNextUpdateCoro(_callback, _updateCount).WrapToIl2Cpp());
     }
 
     public static void RunNextFixedUpdate(System.Action _callback, int _updateCount = 1)
     {
-        s_helperInstance.StartCoroutine(BepInEx.Unity.IL2CPP.Utils.Collections.CollectionExtensions.WrapToIl2Cpp(waitForNextFixedUpdateCoro(_callback, _updateCount)));
+        s_helperInstance.StartCoroutine(waitForNextFixedUpdateCoro(_callback, _updateCount).WrapToIl2Cpp());
     }
 
     private static System.Collections.IEnumerator waitForNextUpdateCoro(System.Action _callback, int _updateCount)

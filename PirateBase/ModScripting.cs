@@ -1,7 +1,5 @@
 ﻿using BepInEx;
-using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime;
-using Il2CppInterop.Runtime.Injection;
 using HarmonyLib;
 using UnityEngine;
 using Mimimi.MiScript;
@@ -12,7 +10,6 @@ using MethodInfoNET = System.Reflection.MethodInfo;
 using MethodInfoIL2CPP = Il2CppSystem.Reflection.MethodInfo;
 using BindingFlagsNET = System.Reflection.BindingFlags;
 using BindingFlagsIL2CPP = Il2CppSystem.Reflection.BindingFlags;
-using System.Linq.Expressions;
 
 namespace PirateBase;
 
@@ -54,8 +51,8 @@ public static class ModScripting
 
         s_instanceDict.Add(il2cppType.Pointer, _instance);
 
-        // TODO can't have multiple methods with the same name, because miscript tries to access parameter name, which isn't set
-        // TODO can't return ienumerators
+        // TODO can't have multiple methods with the same name, because miscript tries to access parameter name via reflection, which isn't set.
+        // TODO can't return ienumerators.
 
         var netMethods = netType.GetMethods(BindingFlagsNET.Instance | BindingFlagsNET.Public | BindingFlagsNET.NonPublic);
         var il2cppMethods = il2cppType.GetMethods(BindingFlagsIL2CPP.Instance | BindingFlagsIL2CPP.Public | BindingFlagsIL2CPP.NonPublic);

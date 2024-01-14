@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using Il2CppSystem.Collections.Generic;
 using Il2CppInterop.Runtime.Injection;
 using Il2CppInterop.Runtime.Attributes;
 

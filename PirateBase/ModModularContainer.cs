@@ -1,7 +1,7 @@
 ﻿using BepInEx;
-using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime.Injection;
 using Il2CppInterop.Runtime.Attributes;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -11,8 +11,8 @@ namespace PirateBase;
 [Il2CppImplements(typeof(IModularContainer))]
 public class ModModularContainer : Il2CppSystem.Object
 {
-    private System.Collections.Generic.Dictionary<long, Object> m_assetDict = new();
-    private System.Collections.Generic.List<SceneAssetHandler.AssetDictEntry> m_assets = new();
+    private Dictionary<long, Object> m_assetDict = new();
+    private List<SceneAssetHandler.AssetDictEntry> m_assets = new();
 
     private static ModModularContainer s_instance;
 
@@ -31,23 +31,6 @@ public class ModModularContainer : Il2CppSystem.Object
         ClassInjector.RegisterTypeInIl2Cpp<ModModularContainer>();
         s_instance = new ModModularContainer();
         SceneModularHandler.registerStatic(s_instance.Cast<IModularContainer>());
-    }
-
-    public string name => "pirate_base_modular";
-
-    public Il2CppSystem.Collections.Generic.List<SceneAssetHandler.AssetDictEntry> getAssets()
-    {
-        return s_instance.m_assets.ToIL2CPP();
-    }
-
-    private static void registerAsset(long _id, Object _asset)
-    {
-        var entry = new SceneAssetHandler.AssetDictEntry(_asset, _id);
-        entry.m_obj = _asset;
-        entry.m_lID = _id;
-
-        s_instance.m_assets.Add(entry);
-        s_instance.m_assetDict.Add(_id, _asset);
     }
 
     public static T Load<T>(string _key) where T : Object
@@ -94,6 +77,27 @@ public class ModModularContainer : Il2CppSystem.Object
             }
             return null;
         }
+    }
+
+    // IModularContainer
+
+    public string name => "pirate_base_modular";
+
+    public Il2CppSystem.Collections.Generic.List<SceneAssetHandler.AssetDictEntry> getAssets()
+    {
+        return s_instance.m_assets.ToIL2CPP();
+    }
+
+    //
+
+    private static void registerAsset(long _id, Object _asset)
+    {
+        var entry = new SceneAssetHandler.AssetDictEntry(_asset, _id);
+        entry.m_obj = _asset;
+        entry.m_lID = _id;
+
+        s_instance.m_assets.Add(entry);
+        s_instance.m_assetDict.Add(_id, _asset);
     }
 
     private static long stringToHash(string _input)
