@@ -45,13 +45,25 @@ public struct ModSerializeHelper
             m_dictFields.Add(_id, _value);
     }
 
-    public void Serialize(long _id, UnityEngine.Object _value)
+    public void Serialize(long _id, UnityEngine.ScriptableObject _value)
+    {
+        if (_value != null)
+            m_dictFields.Add(_id, SaveLoadIDManager.iRefToID_ScriptableObj(_value));
+    }
+
+    public void Serialize(long _id, UnityEngine.Material _value)
+    {
+        if (_value != null)
+            m_dictFields.Add(_id, SaveLoadIDManager.iRefToID_Material(_value));
+    }
+
+    public void SerializeUnityObject(long _id, UnityEngine.Object _value)
     {
         if (_value != null)
             m_dictFields.Add(_id, SaveLoadIDManager.iRefToID_UnityObj(_value));
     }
 
-    public void Serialize(long _id, Object _value)
+    public void SerializeSystemObject(long _id, Object _value)
     {
         if (_value != null)
             m_dictFields.Add(_id, _value);
@@ -150,11 +162,41 @@ public struct ModDeserializeHelper
         return false;
     }
 
-    public bool Deserialize<T>(long _id, ref T _value) where T : UnityEngine.Object
+    public bool DeserializeScriptableObject<T>(long _id, ref T _value) where T : UnityEngine.ScriptableObject
+    {
+        if (m_dictFields.TryGetValue(_id, out var value))
+        {
+            _value = SaveLoadTypeDeserializer.recreateRefsFromIDs(m_dictObjects, m_dictAssets, m_dictClasses, value).Cast<T>();
+            return true;
+        }
+        return false;
+    }
+
+    public bool DeserializeMaterial<T>(long _id, ref T _value) where T : UnityEngine.Material
+    {
+        if (m_dictFields.TryGetValue(_id, out var value))
+        {
+            _value = SaveLoadTypeDeserializer.recreateRefsFromIDs(m_dictObjects, m_dictAssets, m_dictClasses, value).Cast<T>();
+            return true;
+        }
+        return false;
+    }
+
+    public bool DeserializeUnityObject<T>(long _id, ref T _value) where T : UnityEngine.Object
     {
         if (m_dictFields.TryGetValue(_id, out var value))
         {
             _value = SaveLoadTypeDeserializer.recreateRefsFromIDs_UnityObj(m_dictObjects, m_dictAssets, value).Cast<T>();
+            return true;
+        }
+        return false;
+    }
+
+    public bool DeserializeSystemObject<T>(long _id, ref T _value) where T : Object
+    {
+        if (m_dictFields.TryGetValue(_id, out var value))
+        {
+            _value = SaveLoadTypeDeserializer.recreateRefsFromIDs_SystemObj(m_dictClasses, value).Cast<T>();
             return true;
         }
         return false;
