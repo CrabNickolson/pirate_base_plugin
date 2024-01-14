@@ -15,6 +15,8 @@ public class Plugin : BasePlugin
     public const string c_pluginName = "PirateBase";
     public const string c_processName = "ShadowGambit_TCC.exe";
 
+    //
+
     public override void Load()
     {
         PluginLog = Log;

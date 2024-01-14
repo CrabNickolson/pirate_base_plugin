@@ -9,6 +9,8 @@ public struct ModSerializeHelper
     private Dictionary<long, Object> m_dictFields;
     public Dictionary<long, Object> dictFields => m_dictFields;
 
+    //
+
     public ModSerializeHelper(Dictionary<long, Object> _dictFields)
     {
         m_dictFields = _dictFields;
@@ -81,6 +83,8 @@ public struct ModDeserializeHelper
     public Dictionary<long, UnityEngine.Object> dictObjects => m_dictObjects;
     public Dictionary<long, UnityEngine.Object> dictAssets => m_dictAssets;
     public Dictionary<long, Object> dictClasses => m_dictClasses;
+
+    //
 
     public ModDeserializeHelper(Dictionary<long, Object> _dictFields, Dictionary<long, UnityEngine.Object> _dictObjects,
         Dictionary<long, UnityEngine.Object> _dictAssets, Dictionary<long, Object> _dictClasses)

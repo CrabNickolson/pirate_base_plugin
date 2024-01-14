@@ -175,7 +175,8 @@ public static class ModCharacterUtility
             _bQueueActions,
             _bSkipLandAnimation,
             _bSkipLandSfx,
-            NullableUtility.CreateNullable(CreateNoiseSettings(_charOrigin), _forceHasNoValue: true), // TODO can't set this properly because the game explodes
+            // TODO Creating a nullable from NoiseEmitterSettings the usual way causes the game to crash.
+            NullableUtility.CreateNullable(CreateNoiseSettings(_charOrigin), _forceHasNoValue: true),
             _actionFly,
             _actionHitGround,
             _animHierarchyNodeTarget,
@@ -184,7 +185,7 @@ public static class ModCharacterUtility
 
     public static NoiseEmitter.NoiseEmitterSettings CreateNoiseSettings(MiCharacter _character)
     {
-        // NoiseEmitterSettings constructor is broken, probably because of BalancedNoiseType
+        // NoiseEmitterSettings constructor is broken, probably because of BalancedNoiseType.
         return _character.movementNoise.m_noiseEmitter.settings.MemberwiseClone().Cast<NoiseEmitter.NoiseEmitterSettings>();
     }
 }

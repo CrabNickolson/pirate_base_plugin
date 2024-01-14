@@ -34,6 +34,8 @@ public static class ModScripting
     private static CollectionsNET.Dictionary<System.IntPtr, Il2CppSystem.Object> s_instanceDict = new();
     private static CollectionsIL2CPP.Dictionary<string, CollectionsIL2CPP.List<MethodInfoIL2CPP>> s_commandsDict = new();
 
+    //
+
     public static void Init()
     {
         Harmony.CreateAndPatchAll(typeof(ScriptingPatches));
@@ -69,6 +71,8 @@ public static class ModScripting
             }
         }
     }
+
+    //
 
     private static MethodInfoIL2CPP findIl2CPPMethodInfo(MethodInfoNET _method, Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<MethodInfoIL2CPP> _il2cppMethods)
     {

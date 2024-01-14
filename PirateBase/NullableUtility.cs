@@ -10,7 +10,7 @@ public static class NullableUtility
             return new Il2CppSystem.Nullable<T>(_value);
         else
         {
-            // hackfix empty constructor sometimes throwing exception
+            // Hackfix empty constructor sometimes throwing exception.
             var value = new Il2CppSystem.Nullable<T>(_value);
             value.hasValue = false;
             return value;
@@ -23,7 +23,7 @@ public static class NullableUtility
             return new Il2CppSystem.Nullable<T>(_value.Value);
         else
         {
-            // hackfix empty constructor sometimes throwing exception
+            // Hackfix empty constructor sometimes throwing exception.
             var value = new Il2CppSystem.Nullable<T>(default(T));
             value.hasValue = false;
             return value;

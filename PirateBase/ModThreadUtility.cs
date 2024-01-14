@@ -7,8 +7,9 @@ public static class ModThreadUtility
 {
     [System.ThreadStatic]
     private static System.IntPtr s_threadPtr = System.IntPtr.Zero;
-
     private static List<System.IntPtr> s_attachedThreads = new();
+
+    //
 
     public static System.IntPtr AttachThread()
     {

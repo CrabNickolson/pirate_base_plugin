@@ -10,6 +10,8 @@ public static class ShaderUtility
     private static Shader s_standardShaderHideVC;
     private static Shader s_standardShaderShowVC;
 
+    //
+
     public static Shader FindStandardHideVCShader()
     {
         if (s_standardShaderHideVC == null)

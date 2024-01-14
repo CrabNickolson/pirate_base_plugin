@@ -7,6 +7,7 @@ namespace PirateBase;
 public class ModSaveable : MiSaveable
 {
     private UnityEngine.Transform m_cachedTransform;
+    [HideFromIl2Cpp]
     public new UnityEngine.Transform trans
     {
         get
@@ -26,6 +27,7 @@ public class ModSaveable : MiSaveable
 
     public override void AwakeDelayed()
     {
+        // We are overriding some of these functions so that the game doesn't instantly crash if someone calls `base.method()`.
     }
 
     public override void MiAwake()

@@ -16,6 +16,8 @@ public class ModModularContainer : Il2CppSystem.Object
 
     private static ModModularContainer s_instance;
 
+    //
+
     public ModModularContainer(System.IntPtr ptr) : base(ptr) { }
 
     public ModModularContainer() : base(ClassInjector.DerivedConstructorPointer<ModModularContainer>())

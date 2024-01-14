@@ -14,14 +14,16 @@ public static class GameEvents
     private static System.Action s_gameInitCallbacks;
 
     private static Il2CppSystem.Action s_onSceneInitFinished;
-    public static System.Action sceneInitFinished { get; set; }
-
-    public static System.Action applicationQuit { get; set; }
 
     private static SaveProcessManager.BeforeSaveDelegate s_onBeforeSave;
     private static SaveProcessManager.AfterSaveDelegate s_onAfterSave;
     private static SaveProcessManager.BeforeLoadDelegate s_onBeforeLoad;
     private static SaveProcessManager.AfterLoadDelegate s_onAfterLoad;
+
+    //
+
+    public static System.Action sceneInitFinished { get; set; }
+    public static System.Action applicationQuit { get; set; }
 
     public static System.Action<SaveGameHolder> beforeSave { get; set; }
     public static System.Action afterSaveBeforeWrite { get; set; }
@@ -99,23 +101,12 @@ public static class GameEvents
         }
     }
 
-    //
-
     public static void RunOnGameInit(System.Action _callback)
     {
         if (MiInitialization.bFinished)
             _callback?.Invoke();
         else
             s_gameInitCallbacks += _callback;
-    }
-
-    private static System.Collections.IEnumerator waitForGameInitCoro()
-    {
-        while (!MiInitialization.bFinished)
-            yield return null;
-
-        s_gameInitCallbacks?.Invoke();
-        s_gameInitCallbacks = null;
     }
 
     public static void RunNextUpdate(System.Action _callback, int _updateCount = 1)
@@ -126,6 +117,17 @@ public static class GameEvents
     public static void RunNextFixedUpdate(System.Action _callback, int _updateCount = 1)
     {
         s_helperInstance.StartCoroutine(waitForNextFixedUpdateCoro(_callback, _updateCount).WrapToIl2Cpp());
+    }
+
+    //
+
+    private static System.Collections.IEnumerator waitForGameInitCoro()
+    {
+        while (!MiInitialization.bFinished)
+            yield return null;
+
+        s_gameInitCallbacks?.Invoke();
+        s_gameInitCallbacks = null;
     }
 
     private static System.Collections.IEnumerator waitForNextUpdateCoro(System.Action _callback, int _updateCount)

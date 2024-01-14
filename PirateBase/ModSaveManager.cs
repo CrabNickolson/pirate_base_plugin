@@ -16,6 +16,8 @@ public static class ModSaveManager
 
     private static System.Collections.Generic.List<ModSaveable> s_objsToSave;
 
+    //
+
     public static void Init()
     {
         s_objsToSave = new();
@@ -104,6 +106,8 @@ public static class ModSaveManager
             updateIDDicts();
         return s_lastIdToClassDict;
     }
+
+    //
 
     private static void onBeforeSave(SaveGameHolder _saveGameHolder)
     {

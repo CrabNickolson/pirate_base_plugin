@@ -57,7 +57,7 @@ public static class ClassExtensions
 
     public static Il2CppSystem.Collections.Generic.List<T> ToIL2CPP<T>(this System.Collections.Generic.List<T> _list) where T : Il2CppInterop.Runtime.InteropTypes.Il2CppObjectBase
     {
-        // adding elements to a il2cpp list normally corrupts memory...
+        // Adding elements to an Il2Cpp list corrupts memory...
         int listCapacity = _list.Count > 0 ? Mathf.Max(Mathf.NextPowerOfTwo(_list.Count), 4) : 0;
         var il2cppArray = new Il2CppReferenceArray<T>(listCapacity);
         for (int i = 0; i < _list.Count; i++)
@@ -72,7 +72,7 @@ public static class ClassExtensions
 
     public unsafe static void CopyToIL2CPP(this Vector3NET[] _array, Il2CppStructArray<Vector3IL2CPP> _il2cppArray)
     {
-        // creating many il2cpp structs causes (gc?) freezes, so we need to avoid that as much as possible
+        // Creating many Il2Cpp structs causes (GC?) freezes, so we need to avoid that as much as possible.
         int count = System.Math.Min(_array.Length, _il2cppArray.Length);
         System.IntPtr ptr = _il2cppArray.Pointer;
         Vector3IL2CPP v3 = new Vector3IL2CPP();
@@ -123,10 +123,12 @@ public static class ClassExtensions
 
     public static Mesh CreateReadableCopy(this Mesh _mesh, bool _validate = false)
     {
+        // https://forum.unity.com/threads/reading-meshes-at-runtime-that-are-not-enabled-for-read-write.950170/#post-8891865
+
         Mesh meshCopy = new Mesh();
         meshCopy.indexFormat = _mesh.indexFormat;
 
-        // Handle vertices
+        // Handle vertices.
         GraphicsBuffer verticesBuffer = _mesh.GetVertexBuffer(0);
         int totalSize = verticesBuffer.stride * verticesBuffer.count;
         var data = new Il2CppStructArray<byte>(totalSize);
@@ -137,8 +139,8 @@ public static class ClassExtensions
 
         if (_validate)
         {
-            // reading meshes back from gpu memory does not work arbitrarily for some meshes.
-            // we can detect this by checking if our result buffer is all zeros.
+            // Reading meshes back from GPU memory does not work arbitrarily for some meshes.
+            // We can detect this by checking if our result buffer is all zeros.
             bool vertexDataValid = false;
             for (int i = 0; i < totalSize; i++)
             {
@@ -155,7 +157,7 @@ public static class ClassExtensions
             }
         }
 
-        // Handle triangles
+        // Handle triangles.
         meshCopy.subMeshCount = _mesh.subMeshCount;
         GraphicsBuffer indexesBuffer = _mesh.GetIndexBuffer();
         int tot = indexesBuffer.stride * indexesBuffer.count;
@@ -165,11 +167,11 @@ public static class ClassExtensions
         meshCopy.InternalSetIndexBufferDataFromArray(indexesData.Cast<Il2CppSystem.Array>(), 0, 0, tot, System.Runtime.InteropServices.Marshal.SizeOf<byte>(), UnityEngine.Rendering.MeshUpdateFlags.Default);
         indexesBuffer.Release();
 
-        // Restore submesh structure
+        // Restore submesh structure.
         uint currentIndexOffset = 0;
         for (int i = 0; i < meshCopy.subMeshCount; i++)
         {
-            // normal property setters on SubMeshDescriptor are broken for some reason
+            // Normal property setters on SubMeshDescriptor are broken for some reason.
             uint subMeshIndexCount = _mesh.GetIndexCount(i);
             var desc = new UnityEngine.Rendering.SubMeshDescriptor();
             desc._indexStart_k__BackingField = (int)currentIndexOffset;
@@ -184,7 +186,7 @@ public static class ClassExtensions
             currentIndexOffset += subMeshIndexCount;
         }
 
-        // Recalculate normals and bounds
+        // Recalculate normals and bounds.
         meshCopy.RecalculateNormals();
         meshCopy.RecalculateBounds();
 
