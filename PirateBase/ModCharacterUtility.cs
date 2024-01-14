@@ -1,11 +1,10 @@
 ﻿using BepInEx;
-using BepInEx.Unity.IL2CPP;
 using UnityEngine;
 using Mimimi.Animation;
 
 namespace PirateBase;
 
-public static class CharacterUtility
+public static class ModCharacterUtility
 {
     public static MiCharacterImpulseHandler.ImpulseOptionsDamage CreateDamageOptions(
         int _iDamage,
@@ -176,7 +175,7 @@ public static class CharacterUtility
             _bQueueActions,
             _bSkipLandAnimation,
             _bSkipLandSfx,
-            NullableUtility.CreateNullable<NoiseEmitter.NoiseEmitterSettings>(CreateNoiseSettings(_charOrigin), _forceHasNoValue: true), // TODO can't set this properly because the game explodes
+            NullableUtility.CreateNullable(CreateNoiseSettings(_charOrigin), _forceHasNoValue: true), // TODO can't set this properly because the game explodes
             _actionFly,
             _actionHitGround,
             _animHierarchyNodeTarget,
