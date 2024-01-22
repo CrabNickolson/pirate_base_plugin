@@ -121,7 +121,7 @@ internal class YourSaveableClass : ModSaveable
         base.serializeMod(ref _helper);
 
         _helper.Serialize(0, m_savedProperty);
-        _helper.Serialize(1, m_savedReference);
+        _helper.SerializeUnityObject(1, m_savedReference);
     }
 
     [HideFromIl2Cpp]
@@ -130,12 +130,12 @@ internal class YourSaveableClass : ModSaveable
         base.deserializeMod(ref _helper);
 
         _helper.Deserialize(0, ref m_savedProperty);
-        _helper.Deserialize(1, ref m_savedReference);
+        _helper.DeserializeUnityObject(1, ref m_savedReference);
     }
 }
 ```
 
-Override `serializeMod()` and `deserializeMod()` and add the fields that you want to have saved. Be careful that you use the correct serialize/deserialize methods for your field type.
+Override `serializeMod()` and `deserializeMod()` and add the fields that you want to have saved. Be careful that you use the correct serialize/deserialize methods for your field type. Each field needs to have a (for the type) unique ID assigned to it.
 
 When your plugin is loading you must register your component class with `ClassInjector.RegisterTypeInIl2Cpp<YourSaveableClass>()` and `ModSaveManager.RegisterType<YourSaveableClass>()`.
 
@@ -145,8 +145,13 @@ var go = new GameObject();
 go.transform.SetParent(SaveLoadSceneManager.transGetRoot());
 go.AddComponent<YourSaveableClass>();
 ````
+
 #### Asset References
 Any assets (e.g. prefabs/materials/etc.) that are instantiated in a saveroot or are referenced in saved components must be loaded on game init with `ModModularContainer.Load<T>("addressable_key")`, so that the savesystem knows about them. Unfortunately you also need to manually load any dependencies (e.g. materials on prefab models) of these assets. If this becomes too much work, you could also consider working around this by keeping any models/particle effects/etc. outside of the saveroot and then manually create and destroy these objects when the saved component is created and destroyed.
+
+#### Other Limitations
+- Saving custom modded classes/structs probably does not work (except for classes that inherit from UnityEngine.Object).
+- `ModSerializeHelper` currently does not expose every saveable struct type, e.g. `double` or `long`. You can still save these by adding them manually to `_helper.dictFields`.
 
 ### Update
 With `ModUpdate.shouldSkipUpdate` you can check if it is currently safe to execute Update methods on your custom components.
