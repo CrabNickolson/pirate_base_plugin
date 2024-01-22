@@ -163,3 +163,8 @@ private void Update()
 ### Shader
 For some reason `UnityEngine.Shader.Find("name")` does not work. Instead you can directly load shaders with the Addressable system, although for most objects you will want you will want to use the "MiStandardMetallic" shaders.
 You can access these with `ShaderUtility.FindStandardHideVCShader()` and `ShaderUtility.FindStandardShowVCShader()`, which will make the viewcone draw behind or infront of your object respectively.
+
+### Asset Bundle Checks
+Shadow Gambit checks the file size of its own asset bundles on boot, and refuses to start if they don't match a known value. This makes it difficult to modify these bundles.
+
+You can disable this check either by deleting `[game folder]\ShadowGambit_TCC_Data\StreamingAssets\aa\catalog_assetbundle_filesize_cache.json` or by calling `ModAddressableManager.disableBundleFileSizeChecks = true` from within the load function of your plugin.
