@@ -23,6 +23,7 @@ public class Plugin : BasePlugin
 
         ClassInjector.RegisterTypeInIl2Cpp<ModSaveable>();
 
+        ModAddressableManager.Init();
         GameEvents.Init();
         GameEvents.RunOnGameInit(onGameInit);
         GameEvents.applicationQuit += onApplicationQuit;
@@ -32,6 +33,7 @@ public class Plugin : BasePlugin
 
     public override bool Unload()
     {
+        ModAddressableManager.Dispose();
         GameEvents.Dispose();
         ModSaveManager.Dispose();
         ModThreadUtility.DetachAllThreads();
