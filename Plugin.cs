@@ -21,7 +21,10 @@ public class Plugin : BasePlugin
     {
         PluginLog = Log;
 
-        ClassInjector.RegisterTypeInIl2Cpp<ModSaveable>();
+        if (!ClassInjector.IsTypeRegisteredInIl2Cpp<ModSaveable>())
+            ClassInjector.RegisterTypeInIl2Cpp<ModSaveable>();
+        if (!ClassInjector.IsTypeRegisteredInIl2Cpp<ModModularContainer>())
+            ClassInjector.RegisterTypeInIl2Cpp<ModModularContainer>();
 
         ModAddressableManager.Init();
         GameEvents.Init();

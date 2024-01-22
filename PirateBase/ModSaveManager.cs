@@ -18,44 +18,6 @@ public static class ModSaveManager
 
     //
 
-    public static void Init()
-    {
-        s_objsToSave = new();
-        s_lastIDToDataStructureDict = new();
-        s_lastIdToObjectDict = new();
-        s_lastIdToAssetDict = new();
-        s_lastIdToClassDict = new();
-
-        RegisterType<ModSaveable>();
-
-        GameEvents.beforeSave += onBeforeSave;
-        GameEvents.afterSaveBeforeWrite += onAfterSaveBeforeWrite;
-        GameEvents.afterSave += onAfterSave;
-        GameEvents.deserializeSaveGame += onDeserializeSaveGame;
-        GameEvents.beforeLoad += onBeforeLoad;
-    }
-
-    public static void Dispose()
-    {
-        s_objsToSave = null;
-        s_lastIDToDataStructureDict = null;
-        s_lastIdToObjectDict = null;
-        s_lastIdToAssetDict = null;
-        s_lastIdToClassDict = null;
-
-        if (s_lastLoadDataStructuresPtr != 0)
-        {
-            Il2CppInterop.Runtime.IL2CPP.il2cpp_gchandle_free(s_lastLoadDataStructuresPtr);
-            s_lastLoadDataStructuresPtr = 0;
-        }
-
-        GameEvents.beforeSave -= onBeforeSave;
-        GameEvents.afterSaveBeforeWrite -= onAfterSaveBeforeWrite;
-        GameEvents.afterSave -= onAfterSave;
-        GameEvents.deserializeSaveGame -= onDeserializeSaveGame;
-        GameEvents.beforeLoad -= onBeforeLoad;
-    }
-
     public static void RegisterObjectToSave(ModSaveable _modSaveable)
     {
         s_objsToSave.Add(_modSaveable);
@@ -108,6 +70,44 @@ public static class ModSaveManager
     }
 
     //
+
+    internal static void Init()
+    {
+        s_objsToSave = new();
+        s_lastIDToDataStructureDict = new();
+        s_lastIdToObjectDict = new();
+        s_lastIdToAssetDict = new();
+        s_lastIdToClassDict = new();
+
+        RegisterType<ModSaveable>();
+
+        GameEvents.beforeSave += onBeforeSave;
+        GameEvents.afterSaveBeforeWrite += onAfterSaveBeforeWrite;
+        GameEvents.afterSave += onAfterSave;
+        GameEvents.deserializeSaveGame += onDeserializeSaveGame;
+        GameEvents.beforeLoad += onBeforeLoad;
+    }
+
+    internal static void Dispose()
+    {
+        s_objsToSave = null;
+        s_lastIDToDataStructureDict = null;
+        s_lastIdToObjectDict = null;
+        s_lastIdToAssetDict = null;
+        s_lastIdToClassDict = null;
+
+        if (s_lastLoadDataStructuresPtr != 0)
+        {
+            Il2CppInterop.Runtime.IL2CPP.il2cpp_gchandle_free(s_lastLoadDataStructuresPtr);
+            s_lastLoadDataStructuresPtr = 0;
+        }
+
+        GameEvents.beforeSave -= onBeforeSave;
+        GameEvents.afterSaveBeforeWrite -= onAfterSaveBeforeWrite;
+        GameEvents.afterSave -= onAfterSave;
+        GameEvents.deserializeSaveGame -= onDeserializeSaveGame;
+        GameEvents.beforeLoad -= onBeforeLoad;
+    }
 
     private static void onBeforeSave(SaveGameHolder _saveGameHolder)
     {

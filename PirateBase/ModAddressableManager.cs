@@ -14,7 +14,7 @@ public static class ModAddressableManager
 
     //
 
-    public static void Init()
+    internal static void Init()
     {
         s_harmony = Harmony.CreateAndPatchAll(typeof(AddressablePatches));
 
@@ -22,7 +22,7 @@ public static class ModAddressableManager
             s_disableBundleFileSizeChecks = true;
     }
 
-    public static void Dispose()
+    internal static void Dispose()
     {
     }
 

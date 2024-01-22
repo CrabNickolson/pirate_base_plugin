@@ -36,11 +36,6 @@ public static class ModScripting
 
     //
 
-    public static void Init()
-    {
-        Harmony.CreateAndPatchAll(typeof(ScriptingPatches));
-    }
-
     public static void RegisterLibrary(Il2CppSystem.Object _instance)
     {
         if (_instance == null)
@@ -73,6 +68,11 @@ public static class ModScripting
     }
 
     //
+
+    internal static void Init()
+    {
+        Harmony.CreateAndPatchAll(typeof(ScriptingPatches));
+    }
 
     private static MethodInfoIL2CPP findIl2CPPMethodInfo(MethodInfoNET _method, Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<MethodInfoIL2CPP> _il2cppMethods)
     {

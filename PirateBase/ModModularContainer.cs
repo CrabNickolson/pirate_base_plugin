@@ -25,16 +25,6 @@ public class ModModularContainer : Il2CppSystem.Object
         ClassInjector.DerivedConstructorBody(this);
     }
 
-    public static void Init()
-    {
-        if (s_instance != null)
-            return;
-
-        ClassInjector.RegisterTypeInIl2Cpp<ModModularContainer>();
-        s_instance = new ModModularContainer();
-        SceneModularHandler.registerStatic(s_instance.Cast<IModularContainer>());
-    }
-
     public static T Load<T>(string _key) where T : Object
     {
         long id = stringToHash(_key);
@@ -91,6 +81,15 @@ public class ModModularContainer : Il2CppSystem.Object
     }
 
     //
+
+    internal static void Init()
+    {
+        if (s_instance != null)
+            return;
+
+        s_instance = new ModModularContainer();
+        SceneModularHandler.registerStatic(s_instance.Cast<IModularContainer>());
+    }
 
     private static void registerAsset(long _id, Object _asset)
     {

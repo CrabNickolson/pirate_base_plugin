@@ -36,71 +36,6 @@ public static class GameEvents
     public static System.Action stopModEditing { get; set; }
 
 
-    public static void Init()
-    {
-        s_harmony = Harmony.CreateAndPatchAll(typeof(EventPatches));
-
-        if (s_helperInstance == null)
-        {
-            s_helperInstance = IL2CPPChainloader.AddUnityComponent<GameEventHelper>();
-            s_helperInstance.StartCoroutine(waitForGameInitCoro().WrapToIl2Cpp());
-        }
-
-        RunOnGameInit(() =>
-        {
-            s_onBeforeSave = (SaveProcessManager.BeforeSaveDelegate)onBeforeSave;
-            SaveProcessManager.instance.add_evOnBeforeSave(s_onBeforeSave);
-            s_onAfterSave = (SaveProcessManager.AfterSaveDelegate)onAfterSave;
-            SaveProcessManager.instance.add_evOnAfterSave(s_onAfterSave);
-            s_onBeforeLoad = (SaveProcessManager.BeforeLoadDelegate)onBeforeLoad;
-            SaveProcessManager.instance.add_evOnBeforeLoad(s_onBeforeLoad);
-            s_onAfterLoad = (SaveProcessManager.AfterLoadDelegate)onAfterLoad;
-            SaveProcessManager.instance.add_evOnAfterLoad(s_onAfterLoad);
-
-            s_onSceneInitFinished = (Il2CppSystem.Action)onSceneInitFinished;
-            MiSceneLoaderTactics.s_evOnSceneInitFinished += s_onSceneInitFinished;
-        });
-    }
-
-    public static void Dispose()
-    {
-        if (s_helperInstance != null)
-        {
-            Object.Destroy(s_helperInstance);
-            s_helperInstance = null;
-        }
-
-        if (SaveProcessManager.bInstanceExists)
-        {
-            if (s_onBeforeSave != null)
-            {
-                SaveProcessManager.instance.remove_evOnBeforeSave(s_onBeforeSave);
-                s_onBeforeSave = null;
-            }
-            if (s_onAfterSave != null)
-            {
-                SaveProcessManager.instance.remove_evOnAfterSave(s_onAfterSave);
-                s_onAfterSave = null;
-            }
-            if (s_onBeforeLoad != null)
-            {
-                SaveProcessManager.instance.remove_evOnBeforeLoad(s_onBeforeLoad);
-                s_onBeforeLoad = null;
-            }
-            if (s_onAfterLoad != null)
-            {
-                SaveProcessManager.instance.remove_evOnAfterLoad(s_onAfterLoad);
-                s_onAfterLoad = null;
-            }
-        }
-
-        if (s_onSceneInitFinished != null)
-        {
-            s_onSceneInitFinished -= (Il2CppSystem.Action)onSceneInitFinished;
-            s_onSceneInitFinished = null;
-        }
-    }
-
     public static void RunOnGameInit(System.Action _callback)
     {
         if (MiInitialization.bFinished)
@@ -157,6 +92,71 @@ public static class GameEvents
     }
 
     //
+
+    internal static void Init()
+    {
+        s_harmony = Harmony.CreateAndPatchAll(typeof(EventPatches));
+
+        if (s_helperInstance == null)
+        {
+            s_helperInstance = IL2CPPChainloader.AddUnityComponent<GameEventHelper>();
+            s_helperInstance.StartCoroutine(waitForGameInitCoro().WrapToIl2Cpp());
+        }
+
+        RunOnGameInit(() =>
+        {
+            s_onBeforeSave = (SaveProcessManager.BeforeSaveDelegate)onBeforeSave;
+            SaveProcessManager.instance.add_evOnBeforeSave(s_onBeforeSave);
+            s_onAfterSave = (SaveProcessManager.AfterSaveDelegate)onAfterSave;
+            SaveProcessManager.instance.add_evOnAfterSave(s_onAfterSave);
+            s_onBeforeLoad = (SaveProcessManager.BeforeLoadDelegate)onBeforeLoad;
+            SaveProcessManager.instance.add_evOnBeforeLoad(s_onBeforeLoad);
+            s_onAfterLoad = (SaveProcessManager.AfterLoadDelegate)onAfterLoad;
+            SaveProcessManager.instance.add_evOnAfterLoad(s_onAfterLoad);
+
+            s_onSceneInitFinished = (Il2CppSystem.Action)onSceneInitFinished;
+            MiSceneLoaderTactics.s_evOnSceneInitFinished += s_onSceneInitFinished;
+        });
+    }
+
+    internal static void Dispose()
+    {
+        if (s_helperInstance != null)
+        {
+            Object.Destroy(s_helperInstance);
+            s_helperInstance = null;
+        }
+
+        if (SaveProcessManager.bInstanceExists)
+        {
+            if (s_onBeforeSave != null)
+            {
+                SaveProcessManager.instance.remove_evOnBeforeSave(s_onBeforeSave);
+                s_onBeforeSave = null;
+            }
+            if (s_onAfterSave != null)
+            {
+                SaveProcessManager.instance.remove_evOnAfterSave(s_onAfterSave);
+                s_onAfterSave = null;
+            }
+            if (s_onBeforeLoad != null)
+            {
+                SaveProcessManager.instance.remove_evOnBeforeLoad(s_onBeforeLoad);
+                s_onBeforeLoad = null;
+            }
+            if (s_onAfterLoad != null)
+            {
+                SaveProcessManager.instance.remove_evOnAfterLoad(s_onAfterLoad);
+                s_onAfterLoad = null;
+            }
+        }
+
+        if (s_onSceneInitFinished != null)
+        {
+            s_onSceneInitFinished -= (Il2CppSystem.Action)onSceneInitFinished;
+            s_onSceneInitFinished = null;
+        }
+    }
 
     private static void onBeforeSave(SaveGameHolder _saveGameHolder)
     {
