@@ -149,9 +149,14 @@ go.AddComponent<YourSaveableClass>();
 #### Asset References
 Any assets (e.g. prefabs/materials/etc.) that are instantiated in a saveroot or are referenced in saved components must be loaded on game init with `ModModularContainer.Load<T>("addressable_key")`, so that the savesystem knows about them. Unfortunately you also need to manually load any dependencies (e.g. materials on prefab models) of these assets. If this becomes too much work, you could also consider working around this by keeping any models/particle effects/etc. outside of the saveroot and then manually create and destroy these objects when the saved component is created and destroyed.
 
-#### Other Limitations
-- Saving custom modded classes/structs probably does not work (except for classes that inherit from UnityEngine.Object).
-- `ModSerializeHelper` currently does not expose every saveable struct type, e.g. `double` or `long`. You can still save these by adding them manually to `_helper.dictFields`.
+#### Limitations
+- It is (probably) not possible to save custom modded classes/structs (except for classes that inherit from UnityEngine.Object).
+- It is not possible to save coroutines/`IEnumerator`.
+- It is not possible to save custom delegates.
+- It is also not possible to save callbacks you registered on existing saved game classes, e.g. `MiCharacter.m_evOnDeath`.
+    - You need to remove your callbacks on `GameEvents.beforeSave` and then reregister them on `GameEvents.afterSave`.
+- `ModSerializeHelper` currently does not expose every saveable struct type, e.g. `double` or `long`.
+    - You can still save these fields by adding them manually to `_helper.dictFields`.
 
 ### Update
 With `ModUpdate.shouldSkipUpdate` you can check if it is currently safe to execute Update methods on your custom components.
